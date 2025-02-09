@@ -1,0 +1,47 @@
+/* Side navigation */
+.side-nav {
+  width: 250px;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: -250px;
+  background-color: #2b2b2b;
+  overflow-x: hidden;
+  transition: 0.3s;
+  /* z-index: 1; Ensure the side navigation is below the hamburger menu icon */
+}
+
+.side-nav.visible {
+  left: 0;
+}
+
+.side-nav ul {
+  list-style-type: none;
+  padding: 0;
+  padding-top: 50px;
+}
+
+.side-nav ul li {
+  padding: 16px;
+  text-align: left;
+}
+
+.side-nav ul li a {
+  color: #fff;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+}
+
+.side-nav ul li a i {
+  margin-right: 10px;
+}
+
+.side-nav ul li a:hover {
+  color: #ffa500; /* Orange on hover */
+}
+
+ul li.active i {
+  color: #ffa500;
+  scale: 1.1;
+}
