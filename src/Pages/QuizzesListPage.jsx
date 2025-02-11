@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getQuizzes } from "../services/quizService";
+import { getQuizzes } from "../Services/quizService";
 
 const QuizzesListPage = () => {
   const [quizzes, setQuizzes] = useState([]);
