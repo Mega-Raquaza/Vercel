@@ -14,7 +14,6 @@ const Home = () => {
         const response = await axios.get(`${CONST_LINK}/api/auth/userdata`, {
           withCredentials: true,
         });
-        console.log(response);
         setEmail(response.data[0]);
       } catch (error) {
         console.error("Error fetching user data:", error);
