@@ -9,10 +9,10 @@ import Achievements from "./Pages/Achievements.jsx";
 import Profile from "./Pages/Profile.jsx";
 import Login from "./Pages/Login.jsx";
 import Signup from "./Pages/Signup.jsx";
-import CreateQuizPage from "./pages/CreateQuizPage.jsx";
+import CreateQuizPage from "./Pages/CreateQuizPage.jsx";
 import QuizzesListPage from "./Pages/QuizzesListPage.jsx";
-import AnswerQuizPage from "./pages/AnswerQuizPage.jsx";
-import ResultPage from "./pages/ResultPage";
+import AnswerQuizPage from "./Pages/AnswerQuizPage.jsx";
+import ResultPage from "./Pages/ResultPage";
 function App() {
   return (
     <Router>
