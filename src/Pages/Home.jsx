@@ -10,13 +10,11 @@ const Home = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log("Fetching data");
         const response = await axios.get(`${CONST_LINK}/api/auth/userdata`, {
           withCredentials: true,
         });
         setEmail(response.data[0]);
       } catch (error) {
-        console.error("Error fetching user data:", error);
         setError("Error fetching user data");
       }
     };
