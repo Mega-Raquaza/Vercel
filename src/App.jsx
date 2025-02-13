@@ -12,27 +12,32 @@ import Signup from "./Pages/Signup.jsx";
 import CreateQuizPage from "./Pages/CreateQuizPage.jsx";
 import QuizzesListPage from "./Pages/QuizzesListPage.jsx";
 import AnswerQuizPage from "./Pages/AnswerQuizPage.jsx";
-import ResultPage from "./Pages/ResultPage";
+import ResultPage from "./Pages/ResultPage.jsx";
+import { AuthProvider } from "./Context/AuthContext"; // ✅ Import AuthProvider
+
 function App() {
   return (
-    <Router>
-      <>
-        <Navbar />
-        <Routes>
-          <Route path="/result" element={<ResultPage />} />
-          <Route path="/" element={<Hero />} />
-          <Route path="/home" element={<Home />} />
-          <Route path="/League" element={<League />} />
-          <Route path="/Achievements" element={<Achievements />} />
-          <Route path="/Profile" element={<Profile />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/create-quiz" element={<CreateQuizPage />} />
-          <Route path="/quizzes" element={<QuizzesListPage />} />
-          <Route path="quiz/:quizId" element={<AnswerQuizPage />} />
-        </Routes>
-      </>
-    </Router>
+    <AuthProvider> {/* ✅ Wrap everything with AuthProvider */}
+      <Router>
+        <>
+          <Navbar />
+          <Routes>
+            <Route path="/result" element={<ResultPage />} />
+            <Route path="/" element={<Hero />} />
+            <Route path="/home" element={<Home />} />
+            <Route path="/League" element={<League />} />
+            <Route path="/Achievements" element={<Achievements />} />
+            <Route path="/Profile" element={<Profile />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/create-quiz" element={<CreateQuizPage />} />
+            <Route path="/quizzes" element={<QuizzesListPage />} />
+            <Route path="/quiz/:quizId" element={<AnswerQuizPage />} />
+          </Routes>
+        </>
+      </Router>
+    </AuthProvider>
   );
 }
+
 export default App;

@@ -1,20 +1,35 @@
 import { useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import axios from "axios";
+
+const CONST_LINK = import.meta.env.VITE_CONST_LINK;
 
 const ResultPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { quiz, answers, timeTaken } = location.state || {};
+  const { quiz, answers, timeTaken, userId } = location.state || {};
 
-  if (!quiz || !answers || !timeTaken) {
+  const [updatedScore, setUpdatedScore] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  if (!quiz || !answers || !timeTaken || !userId) {
     return <p className="text-center text-red-500">Invalid Quiz Data</p>;
   }
 
-  // Calculate Score & Accuracy
+  // Calculate Score
   let correctAnswers = 0;
   const totalQuestions = quiz.questions.length;
+  let totalScore = 0;
+
   const questionAnalysis = quiz.questions.map((q, index) => {
     const isCorrect = q.options[answers[index]] === q.answer;
-    if (isCorrect) correctAnswers++;
+    if (isCorrect) {
+      correctAnswers++;
+      totalScore += 10; // Increase by 10 for correct answers
+    } else {
+      totalScore -= 5; // Decrease by 5 for incorrect answers
+    }
 
     return {
       question: q.question,
@@ -27,6 +42,30 @@ const ResultPage = () => {
 
   const accuracy = ((correctAnswers / totalQuestions) * 100).toFixed(2);
 
+  // Update the score in the database
+  useEffect(() => {
+    const updateScore = async () => {
+      try {
+        const response = await axios.post(
+          `${CONST_LINK}/api/users/update-score`,
+          {
+            userId,
+            scoreChange: totalScore,
+          },
+        );
+
+        setUpdatedScore(response.data.updatedScore);
+        setLoading(false);
+      } catch (err) {
+        console.error("Error updating score:", err);
+        setError("Failed to update score");
+        setLoading(false);
+      }
+    };
+
+    updateScore();
+  }, [userId, totalScore]);
+
   return (
     <div className="max-w-3xl mx-auto p-6 bg-white shadow-md rounded-lg">
       <h1 className="text-2xl font-bold text-center mb-4">Quiz Results</h1>
@@ -37,6 +76,13 @@ const ResultPage = () => {
           Score: {correctAnswers} / {totalQuestions}
         </p>
         <p className="text-green-600 font-semibold">Accuracy: {accuracy}%</p>
+        {loading ? (
+          <p className="text-blue-500">Updating score...</p>
+        ) : error ? (
+          <p className="text-red-500">{error}</p>
+        ) : (
+          <p className="text-green-600">Updated Score: {updatedScore}</p>
+        )}
       </div>
 
       {/* Question Analysis */}

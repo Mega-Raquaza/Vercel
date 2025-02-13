@@ -1,5 +1,5 @@
-import QuizForm from "../Components/QuizForm";
-import { postQuiz } from "../Services/quizService";
+import QuizForm from "../components/QuizForm";
+import { postQuiz } from "../services/quizService";
 
 const CreateQuizPage = () => {
   const handleQuizSubmit = async (quizData) => {
