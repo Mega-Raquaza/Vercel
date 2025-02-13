@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getQuizById } from "../services/quizService";
+import { getQuizById } from "../Services/quizService";
 
 const AnswerQuizPage = () => {
   const { quizId } = useParams();
