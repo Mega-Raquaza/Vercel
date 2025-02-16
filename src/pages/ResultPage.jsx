@@ -1,7 +1,7 @@
 import { useEffect, useState, useContext } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { AuthContext } from "../Context/AuthContext.jsx";
+import { AuthContext } from "../context/AuthContext.jsx";
 
 const CONST_LINK = import.meta.env.VITE_CONST_LINK;
 
