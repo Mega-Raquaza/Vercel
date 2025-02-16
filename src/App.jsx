@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import "@fortawesome/fontawesome-free/css/all.min.css";
-import Navbar from "./Components/Navbar.jsx";
+import Navbar from "./components/Navbar.jsx";
 import Home from "./pages/Home.jsx";
 import Hero from "./pages/Hero.jsx";
 import League from "./pages/League.jsx";
@@ -13,7 +13,7 @@ import CreateQuizPage from "./pages/CreateQuizPage.jsx";
 import QuizzesListPage from "./pages/QuizzesListPage.jsx";
 import AnswerQuizPage from "./pages/AnswerQuizPage.jsx";
 import ResultPage from "./pages/ResultPage.jsx";
-import { AuthProvider, AuthContext } from "./Context/AuthContext.jsx";
+import { AuthProvider, AuthContext } from "./context/AuthContext.jsx";
 import QueryList from "./pages/QueryList.jsx";
 import AskQuery from "./pages/AskQuery.jsx";
 import QueryDetails from "./pages/QueryDetails.jsx";
