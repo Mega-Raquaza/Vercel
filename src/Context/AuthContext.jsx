@@ -1,16 +1,44 @@
 import { createContext, useState, useEffect } from "react";
 import axios from "axios";
 
-const CONST_LINK = import.meta.env.VITE_CONST_LINK;
-
 export const AuthContext = createContext();
 
+const CONST_LINK = import.meta.env.VITE_CONST_LINK;
+
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(() => JSON.parse(localStorage.getItem("user")) || null);
+  const [user, setUser] = useState(undefined); // 🔥 Important: Use undefined to distinguish loading state
   const [loading, setLoading] = useState(true);
 
-  const login = (userData) => {
+  useEffect(() => {
+    const refreshAccessToken = async () => {
+      try {
+        const res = await axios.get(`${CONST_LINK}/api/auth/refresh`, {
+          withCredentials: true, // Ensures cookies are sent
+        });
+
+        if (res.data.accessToken) {
+          localStorage.setItem("accessToken", res.data.accessToken);
+          localStorage.setItem("user", JSON.stringify(res.data.user)); // Store user data
+          setUser(res.data.user);
+          console.log("User refreshed:", res.data.user); // Log the user data
+        } else {
+          console.error("Access token not received");
+          setUser(null);
+        }
+      } catch (err) {
+        console.error("Token refresh failed:", err);
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    refreshAccessToken();
+  }, []);
+
+  const login = (userData, accessToken) => {
     localStorage.setItem("user", JSON.stringify(userData));
+    localStorage.setItem("accessToken", accessToken);
     setUser(userData);
   };
 
@@ -25,37 +53,9 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Auto-login on page refresh
-useEffect(() => {
-  const storedUser = JSON.parse(localStorage.getItem("user"));
-  if (storedUser) {
-    setUser(storedUser); // ✅ Restore user even if token refresh fails
-  }
-
-  const refreshAccessToken = async () => {
-    try {
-      const res = await axios.get(`${CONST_LINK}/api/auth/refresh`, { withCredentials: true });
-      if (res.data.accessToken) {
-        localStorage.setItem("accessToken", res.data.accessToken);
-        setUser(storedUser);
-      }
-    } catch (err) {
-      console.error("Token refresh failed:", err);
-      localStorage.removeItem("accessToken");
-      // ❌ Don't log out immediately; let the user stay signed in
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  refreshAccessToken();
-}, []);
-
-
-
   return (
-    <AuthContext.Provider value={{ user, login, logout, loading }}>
-      {children}
+    <AuthContext.Provider value={{ user, setUser, login, logout, loading }}>
+      {!loading ? children : <p>Loading...</p>}
     </AuthContext.Provider>
   );
 };
