@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { AuthContext } from "../context/AuthContext";
@@ -6,28 +6,19 @@ import { AuthContext } from "../context/AuthContext";
 const CONST_LINK = import.meta.env.VITE_CONST_LINK;
 
 const AskQuery = () => {
-  const { user } = useContext(AuthContext);
+  const { user,refreshUserData} = useContext(AuthContext);
   const navigate = useNavigate();
   const [query, setQuery] = useState({
     title: "",
     description: "",
-    subject: "", // ✅ Added default subject value
-    image: null, // ✅ Store image separately for preview
+    subject: "",
+    medalsUsed: "", // New field: number of medals the user wants to spend
   });
-  const [imagePreview, setImagePreview] = useState(null);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
   const handleChange = (e) => {
     setQuery({ ...query, [e.target.name]: e.target.value });
-  };
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setQuery({ ...query, image: file });
-      setImagePreview(URL.createObjectURL(file)); // ✅ Image preview
-    }
   };
 
   const handleSubmit = async (e) => {
@@ -36,33 +27,29 @@ const AskQuery = () => {
       alert("You must be logged in to ask a question.");
       return;
     }
-  
     setLoading(true);
     setErrorMessage("");
-  
-    console.log("User Data:", user); // Debugging
-    console.log("Username being sent:", user.username); // ✅ Ensure username exists
-  
-    const formData = new FormData();
-    formData.append("title", query.title);
-    formData.append("description", query.description);
-    formData.append("subject", query.subject);
-    formData.append("askedBy", user._id);
-    formData.append("username", user.username); // ✅ Ensure username is sent as a string
-  
-    if (query.image) {
-      formData.append("image", query.image);
-    }
-  
+
     try {
-      await axios.post(`${CONST_LINK}/api/queries/ask`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      await axios.post(
+        `${CONST_LINK}/api/queries/ask`,
+        {
+          title: query.title,
+          description: query.description,
+          subject: query.subject,
+          askedBy: user._id,
+          username: user.username,
+          medalsUsed: query.medalsUsed,
         },
-        withCredentials: true,
-      });
-  
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+          withCredentials: true,
+        }
+      );
+      refreshUserData();
       navigate("/queries");
     } catch (error) {
       console.error("Error posting query:", error.response?.data || error.message);
@@ -71,24 +58,22 @@ const AskQuery = () => {
       setLoading(false);
     }
   };
-  
 
   return (
-    <div className="container mx-auto p-6">
-      <h1 className="text-2xl font-bold text-center mb-6">Ask a Question</h1>
+    <div className="max-w-7xl mx-auto p-4 sm:p-6 min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
+      <h1 className="text-3xl font-bold text-center text-white mb-6">Ask a Question</h1>
       <form
         onSubmit={handleSubmit}
-        className="max-w-lg mx-auto bg-white p-6 shadow rounded"
-        encType="multipart/form-data" // ✅ Ensures proper file handling
+        className="max-w-lg mx-auto bg-gray-800 p-6 shadow rounded-xl border border-gray-700"
       >
         {errorMessage && <p className="text-red-500 text-center mb-4">{errorMessage}</p>}
-
+        
         <select
           name="subject"
           value={query.subject}
           onChange={handleChange}
           required
-          className="w-full p-2 border rounded mb-4"
+          className="w-full p-2 bg-gray-700 border border-gray-600 rounded mb-4 text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
         >
           <option value="">Select Subject</option>
           <option value="Mathematics">Mathematics</option>
@@ -104,7 +89,7 @@ const AskQuery = () => {
           value={query.title}
           onChange={handleChange}
           required
-          className="w-full p-2 border rounded mb-4"
+          className="w-full p-2 bg-gray-700 border border-gray-600 rounded mb-4 text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
         />
 
         <textarea
@@ -113,27 +98,24 @@ const AskQuery = () => {
           value={query.description}
           onChange={handleChange}
           required
-          className="w-full p-2 border rounded mb-4"
+          className="w-full p-2 bg-gray-700 border border-gray-600 rounded mb-4 text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+          rows="4"
         ></textarea>
 
-        <input
-          type="file"
-          name="image"
-          accept="image/*"
-          onChange={handleImageChange}
-          className="w-full p-2 border rounded mb-4"
+        <input 
+          type="number"
+          name="medalsUsed"
+          placeholder="Medals to spend"
+          value={query.medalsUsed}
+          onChange={handleChange}
+          required
+          className="w-full p-2 bg-gray-700 border border-gray-600 rounded mb-4 text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
         />
-
-        {imagePreview && (
-          <div className="mb-4">
-            <img src={imagePreview} alt="Preview" className="w-full h-40 object-cover rounded" />
-          </div>
-        )}
 
         <button
           type="submit"
-          className={`w-full py-2 rounded ${loading ? "bg-gray-400" : "bg-blue-500 text-white"}`}
           disabled={loading}
+          className={`w-full py-2 rounded bg-gradient-to-r from-green-600 to-teal-600 text-white font-bold hover:from-green-500 hover:to-teal-500 transition-all ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
         >
           {loading ? "Submitting..." : "Submit"}
         </button>

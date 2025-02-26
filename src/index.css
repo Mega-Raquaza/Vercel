@@ -20,5 +20,5 @@ body {
   box-sizing: border-box;
   min-height: 100vh;
   width: 100%;
-  padding-bottom: 60px;
+  background: #383838;
 }

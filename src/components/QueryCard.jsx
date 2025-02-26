@@ -1,94 +1,103 @@
-import React, { useState, useContext } from "react";
-import axios from "axios";
-import { AuthContext } from "../context/AuthContext";
-
-const CONST_LINK = import.meta.env.VITE_CONST_LINK;
+import React from "react";
+import { Link } from "react-router-dom";
 
 const QueryCard = ({ query, refreshQueries }) => {
-  const { user } = useContext(AuthContext);
-  const [answer, setAnswer] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  // Handle Upvote
-  const handleUpvote = async () => {
-    if (!user) return alert("You must be logged in to upvote.");
-    try {
-      await axios.post(`${CONST_LINK}/api/queries/${query._id}/upvote`, {}, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
-        withCredentials: true,
-      });
-      refreshQueries(); // Refresh queries after upvoting
-    } catch (error) {
-      console.error("Error upvoting:", error.response?.data || error.message);
-    }
-  };
-
-  // Handle Answer Submission
-  const submitAnswer = async (e) => {
-    e.preventDefault();
-    if (!user) return alert("You must be logged in to answer.");
-    if (!answer.trim()) return;
-
-    setLoading(true);
-    try {
-      await axios.post(`${CONST_LINK}/api/queries/${query._id}/answer`, { answer }, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
-        withCredentials: true,
-      });
-      setAnswer(""); // Clear input after submitting
-      refreshQueries(); // Refresh to show new answer
-    } catch (error) {
-      console.error("Error submitting answer:", error.response?.data || error.message);
-    }
-    setLoading(false);
-  };
+  // Extract the first answer if available
+  const firstAnswer =
+    query.answers && query.answers.length > 0 ? query.answers[0] : null;
 
   return (
-    <div className="p-4 border rounded-lg shadow-md bg-white mb-4">
-      <div className="flex justify-between items-center">
-        <h3 className="text-lg font-semibold">{query.title}</h3>
-        <button onClick={handleUpvote} className="flex items-center space-x-1 text-blue-500 hover:text-blue-700">
-          ▲ <span>{query.upvotes ? query.upvotes.length : 0}</span>
-        </button>
-      </div>
-      <p className="text-gray-600">{query.description}</p>
-      <p className="text-sm text-blue-500">Subject: {query.subject}</p>
-      <p className="text-xs text-gray-400">Asked by: {query.username}</p>
-
-      {/* Answer List */}
-      <div className="mt-4">
-        <h4 className="font-semibold">Answers:</h4>
-        {query.answers && query.answers.length > 0 ? (
-          query.answers.map((ans, index) => (
-            <div key={index} className="p-2 border rounded mt-2 bg-gray-50">
-              <p className="text-sm">{ans.text}</p>
-              <p className="text-xs text-gray-400">By: {ans.answeredBy}</p>
+    <div className="p-4 bg-gradient-to-r from-gray-800 to-gray-700 rounded-xl shadow-lg transform transition duration-300 hover:scale-105 hover:shadow-2xl">
+      <div className="flex items-center space-x-4">
+        {/* Question Asker's Avatar using userDetails.profilePicture */}
+        <div className="w-12 h-12 rounded-full overflow-hidden">
+          {query.userDetails?.profilePicture ? (
+            <img
+              src={query.userDetails?.profilePicture}
+              alt={`${query.username}'s avatar`}
+              className="object-cover w-full h-full"
+            />
+          ) : (
+            <div className="bg-gray-600 flex items-center justify-center w-full h-full">
+              <span className="text-lg text-white font-bold">
+                {query.username ? query.username.charAt(0).toUpperCase() : "U"}
+              </span>
             </div>
-          ))
-        ) : (
-          <p className="text-sm text-gray-500">No answers yet.</p>
-        )}
+          )}
+        </div>
+        {/* Query Content */}
+        <div className="flex-1">
+          <h2 className="text-xl font-bold text-white">{query.title}</h2>
+          <p className="text-xs text-gray-400 mt-1">
+            Asked by: {query.username}
+          </p>
+          <p className="mt-1 text-gray-300 text-sm">
+            {query.description.length > 100
+              ? query.description.substring(0, 100) + "..."
+              : query.description}
+          </p>
+          <div className="mt-2 flex items-center space-x-4 text-xs text-gray-400">
+            <span>
+              <i className="fas fa-book-open mr-1"></i> {query.subject}
+            </span>
+            <span>
+              <i className="fas fa-medal mr-1"></i> {query.medalsUsed} Reward
+            </span>
+            <span>
+              <i className="fas fa-thumbs-up mr-1"></i>{" "}
+              {query.upvotes ? query.upvotes.length : 0}
+            </span>
+            <span>
+              <i className="fas fa-thumbs-down mr-1"></i>{" "}
+              {query.downvotes ? query.downvotes.length : 0}
+            </span>
+          </div>
+          {/* Answer snippet section */}
+          {firstAnswer && (
+            <div className="mt-3 p-3 bg-gray-600 rounded-md">
+              <div className="flex items-center space-x-2">
+                {/* Answerer's Avatar */}
+                <div className="w-8 h-8 rounded-full overflow-hidden bg-gray-500">
+                  {firstAnswer.profilePicture ? (
+                    <img
+                      src={firstAnswer.profilePicture}
+                      alt="Profile"
+                      className="object-cover w-full h-full"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center">
+                      <span className="text-gray-200 text-xs">
+                        {firstAnswer.answeredBy
+                          ? firstAnswer.answeredBy.charAt(0).toUpperCase()
+                          : "U"}
+                      </span>
+                    </div>
+                  )}
+                </div>
+                {/* Answer snippet and username */}
+                <div>
+                  <p className="text-gray-100 text-xs">
+                    {firstAnswer.text.length > 80
+                      ? firstAnswer.text.substring(0, 80) + "..."
+                      : firstAnswer.text}
+                  </p>
+                  <p className="text-gray-300 text-xs">
+                    {firstAnswer.answeredBy}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+          <div className="mt-3">
+            <Link
+              to={`/query/${query._id}`}
+              className="inline-block text-blue-400 hover:underline text-sm transition-colors"
+            >
+              View All Answers
+            </Link>
+          </div>
+        </div>
       </div>
-
-      {/* Answer Form */}
-      {user && (
-        <form onSubmit={submitAnswer} className="mt-4">
-          <textarea
-            className="w-full p-2 border rounded"
-            placeholder="Write your answer..."
-            value={answer}
-            onChange={(e) => setAnswer(e.target.value)}
-            required
-          />
-          <button
-            type="submit"
-            className="w-full bg-green-500 text-white py-2 rounded mt-2 disabled:bg-gray-400"
-            disabled={loading}
-          >
-            {loading ? "Submitting..." : "Submit Answer"}
-          </button>
-        </form>
-      )}
     </div>
   );
 };

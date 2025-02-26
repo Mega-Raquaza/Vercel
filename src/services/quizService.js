@@ -2,14 +2,12 @@ import axios from "axios";
 const CONST_LINK = import.meta.env.VITE_CONST_LINK + "/api/quizzes";
 
 // Create a new quiz
-export const postQuiz = async (quizData) => {
-  try {
-    const response = await axios.post(`${CONST_LINK}/postQuiz`, quizData);
-    return response.data;
-  } catch (error) {
-    console.error("Error creating quiz:", error);
-    throw error;
-  }
+export const postQuiz = (quizData) => {
+  return axios.post(`${CONST_LINK}/postQuiz`, quizData, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+    },
+  });
 };
 
 // Get all quizzes

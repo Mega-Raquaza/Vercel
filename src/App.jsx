@@ -12,12 +12,25 @@ import Signup from "./pages/Signup.jsx";
 import CreateQuizPage from "./pages/CreateQuizPage.jsx";
 import QuizzesListPage from "./pages/QuizzesListPage.jsx";
 import AnswerQuizPage from "./pages/AnswerQuizPage.jsx";
+import QuizLeaderboard from "./pages/QuizLeaderboard.jsx";
 import ResultPage from "./pages/ResultPage.jsx";
-import { AuthProvider, AuthContext } from "./context/AuthContext.jsx";
+import Logout from "./pages/Logout.jsx";
 import QueryList from "./pages/QueryList.jsx";
-import AskQuery from "./pages/AskQuery.jsx";
 import QueryDetails from "./pages/QueryDetails.jsx";
-import AdminPanel from "./pages/AdminPanel.jsx"; // ✅ Import AdminPanel
+import AskQuery from "./pages/AskQuery.jsx";
+
+import ChatPage from "./pages/ChatPage.jsx";
+import FriendListPage from "./pages/FriendListPage.jsx";
+import FriendProfilePage from "./pages/FriendProfilePage.jsx";
+import FriendRequestsPage from "./pages/FriendRequestPage.jsx";
+import FriendSearchPage from "./pages/FriendSearchPage.jsx";
+
+import GameListPage from "./pages/games/GameListPage.jsx";
+import GameLobbyPage from "./pages/games/GameLobbyPage.jsx";
+import GameRoomPage from "./pages/games/GameRoomPage.jsx";
+import TicTacToe from "./pages/games/TicTacToe.jsx";
+// import MultiplayerGamePage from "./pages/MultiplayerGamePage.jsx";
+import { AuthProvider, AuthContext } from "./context/AuthContext.jsx";
 
 function App() {
   return (
@@ -29,20 +42,35 @@ function App() {
             <Route path="/result" element={<ResultPage />} />
             <Route path="/" element={<Hero />} />
             <Route path="/home" element={<Home />} />
-            <Route path="/League" element={<League />} />
-            <Route path="/Achievements" element={<Achievements />} />
-            <Route path="/Profile" element={<Profile />} />
+            <Route path="/league" element={<League />} />
+            <Route path="/achievements" element={<Achievements />} />
+            <Route path="/profile" element={<Profile />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/create-quiz" element={<CreateQuizPage />} />
             <Route path="/quizzes" element={<QuizzesListPage />} />
             <Route path="/quiz/:quizId" element={<AnswerQuizPage />} />
+            <Route path="/quiz/:quizId/leaderboard" element={<QuizLeaderboard />} />
+            <Route path="/logout" element={<Logout />} />
             <Route path="/queries" element={<QueryList />} />
+            <Route path="/query/:queryId" element={<QueryDetails />} />
             <Route path="/query/new" element={<AskQuery />} />
-            <Route path="/query/:id" element={<QueryDetails />} />
-            
-            {/* Protected Admin Route */}
-            <Route path="/admin-panel" element={<AdminRoute />} />
+
+            {/* Friend Routes */}
+            <Route path="/friends/list" element={<FriendListPage />} />
+            <Route path="/friends/requests" element={<FriendRequestsPage />} />
+            <Route path="/friends/search" element={<FriendSearchPage />} />
+            {/* This route is for viewing any user's public profile (including friend's profile) */}
+            <Route path="/profile/:userId" element={<FriendProfilePage />} />
+            <Route path="/chat/:friendId" element={<ChatPage />} />
+            {/* <Route path="/multiplayer" element={<MultiplayerGamePage />} /> */}
+            <Route path="/games" element={<GameListPage />} />
+            <Route path="/game/:gameType" element={<GameLobbyPage />} />
+            <Route path="/game/:gameType/room/:roomCode" element={<GameRoomPage />} />
+            <Route path="/game/tictactoe/room/:roomCode" element={<TicTacToe />} />
+
+            {/* Default fallback route */}
+            <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </>
       </Router>
@@ -50,16 +78,5 @@ function App() {
   );
 }
 
-// ✅ Define AdminRoute as a function that returns a protected <Route>
-const AdminRoute = () => {
-  const { user } = useContext(AuthContext);
-
-  // Redirect if not logged in or not an admin
-  if (!user || user.role !== "god") {
-    return <Navigate to="/" />;
-  }
-
-  return <AdminPanel />;
-};
 
 export default App;

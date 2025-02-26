@@ -1,42 +1,37 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import "./BottomNavigation.css";
 
 const BottomNavigation = () => {
   const location = useLocation();
+  const navItems = [
+    { path: "/home", icon: "fas fa-home", label: "Home" },
+    { path: "/league", icon: "fas fa-trophy", label: "League" },
+    { path: "/queries", icon: "fas fa-comments", label: "Queries" },
+    { path: "/achievements", icon: "fas fa-medal", label: "Achievements" },
+    { path: "/profile", icon: "fas fa-user", label: "Profile" },
+  ];
+
   return (
-    <div className="bottom-nav">
-      <ul>
-        <li className={location.pathname === "/home" ? "active" : ""}>
-          <Link to="/home">
-            <i className="fas fa-home"></i>
-            <div>Home</div>
-          </Link>
-        </li>
-        <li className={location.pathname === "/league" ? "active" : ""}>
-          <Link to="/league">
-            <i className="fas fa-trophy"></i>
-            <div>League</div>
-          </Link>
-        </li>
-        <li className={location.pathname === "/quizzes" ? "active" : ""}>
-          <Link to="/quizzes">
-            <i className="fas fa-question-circle"></i>
-            <div>Quizzes</div>
-          </Link>
-        </li>
-        <li className={location.pathname === "/achievements" ? "active" : ""}>
-          <Link to="/achievements">
-            <i className="fas fa-medal"></i>
-            <div>Achievements</div>
-          </Link>
-        </li>
-        <li className={location.pathname === "/profile" ? "active" : ""}>
-          <Link to="/profile">
-            <i className="fas fa-user"></i>
-            <div>Profile</div>
-          </Link>
-        </li>
+    <div className="fixed bottom-0 left-0 w-full bg-gray-900 border-t border-gray-700 z-50 md:hidden">
+      <ul className="flex justify-evenly items-center py-3">
+        {navItems.map((item) => {
+          const isActive = location.pathname === item.path;
+          return (
+            <li key={item.path} className="flex flex-col items-center">
+              <Link
+                to={item.path}
+                className="text-white no-underline transition-colors duration-200 hover:text-orange-500 flex flex-col items-center"
+              >
+                <i
+                  className={`${item.icon} text-xl mb-1 ${isActive ? "text-orange-500" : "text-white"}`}
+                ></i>
+                <span className={`text-xs ${isActive ? "text-orange-500" : "text-gray-300"}`}>
+                  {item.label}
+                </span>
+              </Link>
+            </li>
+          );
+        })}
       </ul>
     </div>
   );

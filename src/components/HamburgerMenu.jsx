@@ -1,12 +1,10 @@
 import React from "react";
-import "./HamburgerMenu.css";
 
-const HamburgerMenu = ({ toggleMenu, menuVisible }) => {
+const HamburgerMenu = ({ onClick, visible }) => {
   return (
-    <i
-      className={menuVisible ? "fas fa-times" : "fas fa-bars"}
-      onClick={toggleMenu}
-    ></i>
+    <button onClick={onClick} className="md:hidden focus:outline-none">
+      <i className={`text-2xl text-orange-500 ${visible ? "fas fa-times" : "fas fa-bars"}`}></i>
+    </button>
   );
 };
 
