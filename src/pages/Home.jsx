@@ -158,7 +158,7 @@ const Home = () => {
         {user && (
           <div className="max-w-5xl mx-auto bg-gray-800 p-6 rounded-lg shadow-lg border border-gray-700 mb-8 flex flex-col md:flex-row items-center transition transform hover:scale-105">
             <img
-              src={user?.userDetails?.profilePicture || "https://i.pinimg.com/originals/a8/da/22/a8da222be70a71e7858bf752065d5cc3.jpg"}
+              src={user?.userDetails?.profilePicture || ""}
               alt="Profile"
               className="w-32 h-32 rounded-full object-cover border-4 border-purple-500 mb-4 md:mb-0 md:mr-6"
             />
@@ -274,28 +274,10 @@ const Home = () => {
             Our platform seamlessly blends learning with social interaction, providing a dynamic experience that evolves with you.
           </p>
         </section>
-
-        {/* Medal Claim Section */}
-        <section className="max-w-5xl mx-auto bg-gray-800 p-6 rounded-lg shadow-lg border border-gray-700 my-8 text-center">
-          <h2 className="text-3xl font-bold mb-4">Medal Claim</h2>
-          {claimAvailable ? (
-            <button
-              onClick={handleClaimMedals}
-              className="px-6 py-3 bg-green-600 hover:bg-green-700 transition rounded-full text-lg font-semibold transform hover:scale-105"
-            >
-              Claim Medals
-            </button>
-          ) : (
-            <p className="text-gray-400">
-              Next claim available in {Math.floor(claimCountdown / 60000)}m{" "}
-              {Math.floor((claimCountdown % 60000) / 1000)}s.
-            </p>
-          )}
-        </section>
       </div>
 
-      {/* Footer Section with Navigation Links */}
-      <footer className="max-w-5xl mx-auto bg-gray-800 p-6 rounded-lg shadow-lg border border-gray-700 my-8 text-center">
+            {/* Footer Section with Quick Links and Social Media */}
+            <footer className="max-w-5xl mx-auto bg-gray-800 p-6 rounded-lg shadow-lg border border-gray-700 my-8 text-center">
         <div className="mb-4">
           <h2 className="text-2xl font-bold mb-2">Quick Links</h2>
           <div className="flex flex-wrap justify-center gap-4">
@@ -319,8 +301,45 @@ const Home = () => {
             </Link>
           </div>
         </div>
+        <div className="mb-4 flex flex-col items-center">
+          <p className="text-lg font-bold mb-2">Contact me via:</p>
+          <div className="flex gap-4">
+            <a
+              href="https://discord.com/channels/@me/1344743482744377385/1344777681199169546"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-400 hover:text-blue-500 text-2xl"
+            >
+              <i className="fab fa-discord"></i>
+            </a>
+            <a
+              href="https://instagram.com/vishnugawas07"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-pink-400 hover:text-pink-500 text-2xl"
+            >
+              <i className="fab fa-instagram"></i>
+            </a>
+            <a
+              href="https://telegram.me/vishnugawas07"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-500 hover:text-blue-600 text-2xl"
+            >
+              <i className="fab fa-telegram"></i>
+            </a>
+            <a
+              href="https://github.com/vishnugawaso7"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-400 hover:text-gray-500 text-2xl"
+            >
+              <i className="fab fa-github"></i>
+            </a>
+          </div>
+        </div>
         <p className="text-gray-400 text-sm">
-          © {new Date().getFullYear()} Quiz & Social Hub. All rights reserved.
+          © {new Date().getFullYear()} Created By Vishnu Gawas
         </p>
       </footer>
     </div>
