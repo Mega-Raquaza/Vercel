@@ -1,9 +1,40 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, Component } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { AuthContext } from "../context/AuthContext";
 
 const CONST_LINK = import.meta.env.VITE_CONST_LINK;
+
+// ErrorBoundary Component to catch runtime errors
+class ErrorBoundary extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+  componentDidCatch(error, errorInfo) {
+    console.error("ErrorBoundary caught an error:", error, errorInfo);
+  }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="min-h-screen flex flex-col items-center justify-center bg-gray-900 text-white p-4">
+          <h1 className="text-4xl font-bold mb-4">Something went wrong.</h1>
+          <p className="mb-4">{this.state.error?.message}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="bg-red-600 px-4 py-2 rounded hover:bg-red-700"
+          >
+            Reload Page
+          </button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
 
 const Profile = () => {
   const { user, loading, setUser } = useContext(AuthContext);
@@ -16,6 +47,7 @@ const Profile = () => {
   });
   const [profileData, setProfileData] = useState(null);
   const [queries, setQueries] = useState([]);
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
   // Fetch the full profile and queries for the logged in user
@@ -29,13 +61,29 @@ const Profile = () => {
       setQueries(res.data.queries);
     } catch (error) {
       console.error("Error fetching profile data:", error);
+      setErrorMessage("Error fetching profile data.");
     }
   };
+  if (!user) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen bg-gray-900 text-white">
+        <h2 className="text-3xl font-bold mb-4">User not authenticated</h2>
+        <p className="mb-4">Please log in to access the League Dashboard.</p>
+        <button
+          onClick={() => (window.location.href = "/login")}
+          className="bg-blue-600 px-4 py-2 rounded hover:bg-blue-700"
+        >
+          Go to Login
+        </button>
+      </div>
+    );
+  }
 
   useEffect(() => {
     if (user && user._id) {
       fetchProfileData();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   const handleChange = (e) => {
@@ -46,7 +94,7 @@ const Profile = () => {
     try {
       const token = localStorage.getItem("accessToken");
       if (!token) {
-        alert("You are not authenticated. Please log in again.");
+        setErrorMessage("You are not authenticated. Please log in again.");
         return;
       }
       const response = await fetch(`${CONST_LINK}/api/users/update`, {
@@ -62,11 +110,13 @@ const Profile = () => {
       if (response.ok) {
         setUser({ ...user, userDetails: data.userDetails });
         setIsEditing(false);
+        setErrorMessage("");
       } else {
-        alert(data.message || "Failed to update profile");
+        setErrorMessage(data.message || "Failed to update profile.");
       }
     } catch (error) {
       console.error("Error updating profile:", error);
+      setErrorMessage("Error updating profile.");
     }
   };
 
@@ -79,7 +129,7 @@ const Profile = () => {
   if (!user)
     return (
       <div className="min-h-screen flex items-center justify-center text-white">
-        User not logged in. Please <Link to="/login">login</Link>.
+        User not logged in. Please <Link to="/login" className="text-blue-400 underline">login</Link>.
       </div>
     );
   if (!profileData)
@@ -100,7 +150,7 @@ const Profile = () => {
       <div className="max-w-3xl mx-auto bg-gray-800 p-6 rounded-lg shadow-md border border-gray-700 mb-8">
         <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-6 mb-6">
           <img
-            src={profileData.userDetails?.profilePicture || "/default-profile.png"}
+            src={profileData.userDetails?.profilePicture || "https://i.pinimg.com/originals/a8/da/22/a8da222be70a71e7858bf752065d5cc3.jpg"}
             alt="Profile"
             className="w-32 h-32 rounded-full object-cover border-4 border-purple-500"
           />
@@ -192,12 +242,18 @@ const Profile = () => {
                 Save Changes
               </button>
               <button
-                onClick={() => setIsEditing(false)}
+                onClick={() => {
+                  setIsEditing(false);
+                  setErrorMessage("");
+                }}
                 className="flex-1 py-2 bg-gray-600 text-gray-100 rounded hover:bg-gray-500 transition"
               >
                 Cancel
               </button>
             </div>
+            {errorMessage && (
+              <p className="mt-4 text-center text-red-500">{errorMessage}</p>
+            )}
           </>
         ) : (
           <p className="text-gray-300 italic border-l-4 border-purple-500 pl-4">
@@ -231,4 +287,10 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+const ProfileWithErrorBoundary = () => (
+  <ErrorBoundary>
+    <Profile />
+  </ErrorBoundary>
+);
+
+export default ProfileWithErrorBoundary;

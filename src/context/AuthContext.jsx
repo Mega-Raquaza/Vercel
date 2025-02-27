@@ -1,24 +1,41 @@
 import { createContext, useState, useEffect } from "react";
 import axios from "axios";
+import LoadingPage from "../components/LoadingPage";
 
 export const AuthContext = createContext();
 
 const CONST_LINK = import.meta.env.VITE_CONST_LINK;
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(undefined); // undefined distinguishes loading state
+  // Initialize user from localStorage if available
+  const [user, setUser] = useState(() => {
+    try {
+      const storedUser = localStorage.getItem("user");
+      return storedUser ? JSON.parse(storedUser) : undefined;
+    } catch (error) {
+      console.error("Error reading user from localStorage:", error);
+      return undefined;
+    }
+  });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const source = axios.CancelToken.source();
+
     const refreshAccessToken = async () => {
       try {
         const res = await axios.get(`${CONST_LINK}/api/auth/refresh`, {
           withCredentials: true,
+          cancelToken: source.token,
         });
 
         if (res.data.accessToken) {
-          localStorage.setItem("accessToken", res.data.accessToken);
-          localStorage.setItem("user", JSON.stringify(res.data.user));
+          try {
+            localStorage.setItem("accessToken", res.data.accessToken);
+            localStorage.setItem("user", JSON.stringify(res.data.user));
+          } catch (storageError) {
+            console.error("Error saving to localStorage:", storageError);
+          }
           setUser(res.data.user);
           console.log("User refreshed:", res.data.user);
         } else {
@@ -26,20 +43,33 @@ export const AuthProvider = ({ children }) => {
           setUser(null);
         }
       } catch (err) {
-        console.error("Token refresh failed:", err);
-        setUser(null);
+        if (axios.isCancel(err)) {
+          console.log("Token refresh canceled:", err.message);
+        } else {
+          console.error("Token refresh failed:", err);
+          setUser(null);
+        }
       } finally {
         setLoading(false);
       }
     };
 
     refreshAccessToken();
+
+    // Cleanup: cancel the request if the component unmounts
+    return () => {
+      source.cancel("Operation canceled by the user.");
+    };
   }, []);
 
   const login = (userData, accessToken) => {
-    localStorage.setItem("user", JSON.stringify(userData));
-    localStorage.setItem("accessToken", accessToken);
-    setUser(userData);
+    try {
+      localStorage.setItem("user", JSON.stringify(userData));
+      localStorage.setItem("accessToken", accessToken);
+      setUser(userData);
+    } catch (error) {
+      console.error("Error during login:", error);
+    }
   };
 
   const logout = async () => {
@@ -60,15 +90,29 @@ export const AuthProvider = ({ children }) => {
         headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
         withCredentials: true,
       });
-      setUser(res.data.user);
+      if (res.data.user) {
+        setUser(res.data.user);
+        localStorage.setItem("user", JSON.stringify(res.data.user));
+      } else {
+        console.error("No user data returned from /me endpoint");
+      }
     } catch (error) {
       console.error("Error refreshing user data:", error);
     }
   };
 
+  const contextValue = {
+    user,
+    setUser,
+    login,
+    logout,
+    refreshUserData,
+    loading,
+  };
+
   return (
-    <AuthContext.Provider value={{ user, setUser, login, logout, refreshUserData, loading }}>
-      {!loading ? children : <p>Loading...</p>}
+    <AuthContext.Provider value={contextValue}>
+      {!loading ? children : <LoadingPage />}
     </AuthContext.Provider>
   );
 };

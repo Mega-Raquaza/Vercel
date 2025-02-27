@@ -23,12 +23,16 @@ const Login = () => {
         { email, password },
         { withCredentials: true }
       );
-
       if (response.status === 200) {
         toast.success("Login successful");
         console.log("Login successful:", response.data);
-        login(response.data.user, response.data.accessToken); // Save user and token
-        navigate("/profile");
+        // Ensure that the login function correctly updates your AuthContext.
+        // The user object should contain all required properties (e.g., _id) that Profile relies on.
+        login(response.data.user, response.data.accessToken);
+        // Optionally, a slight delay helps ensure the context updates before navigation.
+        setTimeout(() => {
+          navigate("/profile");
+        }, 500);
       } else {
         setError("Login failed, please try again.");
         toast.error("Login failed, please try again.");

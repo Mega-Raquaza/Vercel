@@ -35,6 +35,20 @@ const QueryList = () => {
       setQueries([]);
     }
   };
+  if (!user) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen bg-gray-900 text-white">
+        <h2 className="text-3xl font-bold mb-4">User not authenticated</h2>
+        <p className="mb-4">Please log in to access the League Dashboard.</p>
+        <button
+          onClick={() => (window.location.href = "/login")}
+          className="bg-blue-600 px-4 py-2 rounded hover:bg-blue-700"
+        >
+          Go to Login
+        </button>
+      </div>
+    );
+  }
 
   useEffect(() => {
     fetchQueries();
