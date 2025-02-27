@@ -6,16 +6,17 @@ import { AuthContext } from "../context/AuthContext";
 const CONST_LINK = import.meta.env.VITE_CONST_LINK;
 
 const AskQuery = () => {
-  const { user,refreshUserData} = useContext(AuthContext);
+  const { user, refreshUserData } = useContext(AuthContext);
   const navigate = useNavigate();
   const [query, setQuery] = useState({
     title: "",
     description: "",
     subject: "",
-    medalsUsed: "", // New field: number of medals the user wants to spend
+    medalsUsed: "", // Number of medals the user wants to spend
   });
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+
   if (!user) {
     return (
       <div className="flex flex-col items-center justify-center h-screen bg-gray-900 text-white">
@@ -30,6 +31,7 @@ const AskQuery = () => {
       </div>
     );
   }
+
   const handleChange = (e) => {
     setQuery({ ...query, [e.target.name]: e.target.value });
   };
@@ -79,21 +81,31 @@ const AskQuery = () => {
         onSubmit={handleSubmit}
         className="max-w-lg mx-auto bg-gray-800 p-6 shadow rounded-xl border border-gray-700"
       >
-        {errorMessage && <p className="text-red-500 text-center mb-4">{errorMessage}</p>}
-        
-        <select
-          name="subject"
-          value={query.subject}
-          onChange={handleChange}
-          required
-          className="w-full p-2 bg-gray-700 border border-gray-600 rounded mb-4 text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-        >
-          <option value="">Select Subject</option>
-          <option value="Mathematics">Mathematics</option>
-          <option value="Physics">Physics</option>
-          <option value="Biology">Biology</option>
-          <option value="Chemistry">Chemistry</option>
-        </select>
+        {errorMessage && (
+          <p className="text-red-500 text-center mb-4">{errorMessage}</p>
+        )}
+
+        {/* Subject Input with Datalist */}
+        <div className="mb-4">
+          <input
+            list="subjects"
+            name="subject"
+            value={query.subject}
+            onChange={handleChange}
+            placeholder="Select or enter subject"
+            required
+            className="w-full p-2 bg-gray-700 border border-gray-600 rounded text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+          />
+          <datalist id="subjects">
+            <option value="Physics" />
+            <option value="Chemistry" />
+            <option value="Mathematics" />
+            <option value="Biology" />
+            <option value="Computer Science" />
+            <option value="Trivia" />
+            <option value="Others" />
+          </datalist>
+        </div>
 
         <input
           type="text"
@@ -136,5 +148,6 @@ const AskQuery = () => {
     </div>
   );
 };
+
 
 export default AskQuery;

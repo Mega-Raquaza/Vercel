@@ -8,7 +8,6 @@ import {
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import Navbar from "./components/Navbar.jsx";
 import Home from "./pages/Home.jsx";
-import Hero from "./pages/Hero.jsx";
 import League from "./pages/League.jsx";
 import Achievements from "./pages/Achievements.jsx";
 import Profile from "./pages/Profile.jsx";
@@ -47,7 +46,7 @@ function AppContent() {
       ) : (
         <Routes>
           <Route path="/result" element={<ResultPage />} />
-          <Route path="/" element={<Hero />} />
+          <Route path="/" element={<Home />} />
           <Route path="/home" element={<Home />} />
           <Route path="/league" element={<League />} />
           <Route path="/achievements" element={<Achievements />} />

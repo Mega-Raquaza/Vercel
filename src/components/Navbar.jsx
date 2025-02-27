@@ -36,7 +36,7 @@ const Navbar = () => {
               <li className={`text-lg font-medium ${activeClass("/home")}`}>
                 <Link to="/home" className="no-underline">Home</Link>
               </li>
-              <li className={`text-lg font-medium ${activeClass("/leagues")}`}>
+              <li className={`text-lg font-medium ${activeClass("/league")}`}>
                 <Link to="/league" className="no-underline">League</Link>
               </li>
               <li className={`text-lg font-medium ${activeClass("/queries")}`}>

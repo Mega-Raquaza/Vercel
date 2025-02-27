@@ -105,10 +105,10 @@ const League = () => {
         setMessage("Authentication error. Please log in again.");
         return;
       }
-      // Update to call the correct endpoint defined in your leagues route
+      // Use the correct endpoint from the leagues route
       const res = await axios.put(
         `${CONST_LINK}/api/leagues/advance`,
-        {}, // No additional payload is required since the backend uses req.user to determine the user
+        {},
         {
           headers: { Authorization: `Bearer ${token}` },
           withCredentials: true,
@@ -126,7 +126,6 @@ const League = () => {
       setLoadingAdvance(false);
     }
   };
-  
 
   // Fetch the league rankings list with error handling
   const fetchLeagueList = async () => {
@@ -234,7 +233,7 @@ const League = () => {
                   <div key={player._id} className="flex items-center p-4 bg-gray-700 rounded-lg mb-2">
                     <div className="w-10 h-10 flex-shrink-0 mr-4">
                       <img
-                        src={player.profilePicture || "/default-profile.png"}
+                        src={player?.userDetails?.profilePicture || "https://i.pinimg.com/originals/a8/da/22/a8da222be70a71e7858bf752065d5cc3.jpg"}
                         alt={player.username}
                         className="w-10 h-10 rounded-full object-cover"
                       />

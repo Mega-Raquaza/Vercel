@@ -27,16 +27,14 @@ const Home = () => {
     fetchLatestQueries();
   }, []);
 
-  // Update claim timer: reset every 20 minutes and enable manual claim only at that time
+  // Update claim timer: reset every 20 minutes and enable claim at the 20-min mark
   useEffect(() => {
     const updateClaimTimer = () => {
       const now = new Date();
       const nextClaim = new Date();
-      // Set next claim time to the next 20-minute interval (e.g., 0, 20, 40 minutes)
       nextClaim.setMinutes(now.getMinutes() + 20 - (now.getMinutes() % 20), 0, 0);
       const diff = nextClaim - now;
       setClaimCountdown(diff);
-      // Enable claim only if we are exactly at the 20-minute mark (this check is very brief)
       if (now.getMinutes() % 20 === 0 && now.getSeconds() === 0) {
         setClaimAvailable(true);
       } else {
@@ -61,19 +59,65 @@ const Home = () => {
         }
       );
       alert("Medals claimed successfully!");
-      // Optionally, refresh user data here if needed
+      // Optionally refresh user data here
     } catch (error) {
       console.error("Error claiming medals:", error);
       alert("Error claiming medals");
     }
   };
 
+  // Feature cards data
+  const features = [
+    {
+      title: "Queries",
+      description: "Ask questions and get answers from the community.",
+      icon: "fas fa-comment-dots",
+      link: "/queries",
+      buttonText: "View Queries",
+    },
+    {
+      title: "Friends",
+      description: "Connect with others, view profiles, and chat.",
+      icon: "fas fa-user-friends",
+      link: "/friends/list",
+      buttonText: "Find Friends",
+    },
+    {
+      title: "Games",
+      description: "Play fun multiplayer games with your friends.",
+      icon: "fas fa-gamepad",
+      link: "/games",
+      buttonText: "Game Lobby",
+    },
+  ];
+
+  // Additional feature cards for Achievements and League
+  const extraFeatures = [
+    {
+      title: "Achievements",
+      description: "Unlock and claim rewards as you progress.",
+      icon: "fas fa-trophy",
+      link: "/achievements",
+      buttonText: "View Achievements",
+    },
+    {
+      title: "League",
+      description: "See your ranking and advance your league.",
+      icon: "fas fa-chess-king",
+      link: "/league",
+      buttonText: "View League",
+    },
+  ];
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
       {/* Hero Section */}
       <header
         className="relative flex items-center justify-center h-screen bg-cover bg-center"
-        style={{ backgroundImage: `url("https://source.unsplash.com/1600x900/?technology,abstract")` }}
+        style={{
+          backgroundImage:
+            'url("https://source.unsplash.com/1600x900/?technology,abstract")',
+        }}
       >
         <div className="absolute inset-0 bg-black opacity-60"></div>
         <div className="relative z-10 text-center px-4">
@@ -81,7 +125,7 @@ const Home = () => {
             Genius Clash
           </h1>
           <p className="mt-4 text-xl md:text-2xl text-gray-300">
-            Challenge your mind, connect with friends, and earn rewards.
+            Your hub for quizzes, queries, friends, and multiplayer games.
           </p>
           {user ? (
             <Link
@@ -114,12 +158,12 @@ const Home = () => {
         {user && (
           <div className="max-w-5xl mx-auto bg-gray-800 p-6 rounded-lg shadow-lg border border-gray-700 mb-8 flex flex-col md:flex-row items-center transition transform hover:scale-105">
             <img
-              src={user?.userDetails?.profilePicture || "/default-profile.png"}
+              src={user?.userDetails?.profilePicture || "https://i.pinimg.com/originals/a8/da/22/a8da222be70a71e7858bf752065d5cc3.jpg"}
               alt="Profile"
               className="w-32 h-32 rounded-full object-cover border-4 border-purple-500 mb-4 md:mb-0 md:mr-6"
             />
             <div className="flex-1 text-center md:text-left">
-              <h2 className="text-4xl font-bold">{user.username}</h2>
+              <h1 className="text-4xl font-bold">{user.username}</h1>
               <p className="text-gray-300">{user.email}</p>
               <div className="flex flex-wrap gap-4 justify-center md:justify-start mt-2">
                 <span className="text-lg flex items-center text-gray-400">
@@ -135,28 +179,82 @@ const Home = () => {
           </div>
         )}
 
-        {/* Latest Queries Section */}
-        <div className="max-w-5xl mx-auto bg-gray-800 p-6 rounded-lg shadow-lg border border-gray-700 mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-3xl font-bold text-center">Latest Queries</h2>
-            <Link
-              to="/queries"
-              className="px-4 py-2 bg-gradient-to-r from-green-600 to-teal-600 text-white rounded hover:from-green-500 hover:to-teal-500 transition"
-            >
-              View All Queries
-            </Link>
+        {/* Feature Cards Section */}
+        <section className="max-w-5xl mx-auto p-8">
+          <h2 className="text-4xl font-bold text-center mb-8">Explore Our Features</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {features.map((feature, index) => (
+              <div
+                key={index}
+                className="bg-gray-800 p-6 rounded-lg shadow-lg border border-gray-700 hover:shadow-2xl transition transform hover:scale-105"
+              >
+                <div className="flex flex-col items-center">
+                  <i className={`${feature.icon} text-5xl text-orange-400 mb-4`}></i>
+                  <h3 className="text-2xl font-bold mb-2">{feature.title}</h3>
+                  <p className="text-gray-300 text-center mb-4">
+                    {feature.description}
+                  </p>
+                  <Link
+                    to={feature.link}
+                    className="px-4 py-2 bg-blue-600 hover:bg-blue-700 transition rounded-full text-white font-semibold"
+                  >
+                    {feature.buttonText}
+                  </Link>
+                </div>
+              </div>
+            ))}
           </div>
+        </section>
+
+        {/* Additional Feature Cards for Achievements & League */}
+        <section className="max-w-5xl mx-auto p-8">
+          <h2 className="text-4xl font-bold text-center mb-8">
+            More About Our Platform
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {extraFeatures.map((feature, index) => (
+              <div
+                key={index}
+                className="bg-gray-800 p-6 rounded-lg shadow-lg border border-gray-700 hover:shadow-2xl transition transform hover:scale-105"
+              >
+                <div className="flex flex-col items-center">
+                  <i className={`${feature.icon} text-5xl text-orange-400 mb-4`}></i>
+                  <h3 className="text-2xl font-bold mb-2">{feature.title}</h3>
+                  <p className="text-gray-300 text-center mb-4">
+                    {feature.description}
+                  </p>
+                  <Link
+                    to={feature.link}
+                    className="px-4 py-2 bg-blue-600 hover:bg-blue-700 transition rounded-full text-white font-semibold"
+                  >
+                    {feature.buttonText}
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Latest Queries Section */}
+        <section className="max-w-5xl mx-auto bg-gray-800 p-6 rounded-lg shadow-lg border border-gray-700 my-8">
+          <h2 className="text-3xl font-bold mb-4 text-center">Latest Queries</h2>
           {latestQueries.length > 0 ? (
-            <div className="grid grid-cols-1 gap-4">
+            <div className="space-y-4">
               {latestQueries.map((query) => (
-                <div key={query._id} className="p-4 bg-gray-700 rounded-lg shadow transform hover:scale-105 transition">
+                <div
+                  key={query._id}
+                  className="p-4 bg-gray-700 rounded-lg shadow hover:scale-105 transition transform"
+                >
                   <h3 className="text-xl font-bold text-white">{query.title}</h3>
                   <p className="text-gray-300">
                     {query.description.length > 100
                       ? query.description.substring(0, 100) + "..."
                       : query.description}
                   </p>
-                  <Link to={`/query/${query._id}`} className="text-blue-400 hover:underline text-sm">
+                  <Link
+                    to={`/query/${query._id}`}
+                    className="text-blue-400 hover:underline text-sm"
+                  >
                     View Query
                   </Link>
                 </div>
@@ -165,33 +263,25 @@ const Home = () => {
           ) : (
             <p className="text-center text-gray-400">No queries available.</p>
           )}
-        </div>
+        </section>
 
         {/* About the Website Section */}
-        <div className="max-w-5xl mx-auto bg-gray-800 p-6 rounded-lg shadow-lg border border-gray-700 mb-8">
+        <section className="max-w-5xl mx-auto bg-gray-800 p-6 rounded-lg shadow-lg border border-gray-700 my-8">
           <h2 className="text-3xl font-bold mb-4 text-center">About Quiz & Social Hub</h2>
           <p className="text-gray-300 text-center leading-relaxed">
             Quiz & Social Hub is your ultimate destination to challenge your knowledge, connect with friends, and track your progress.
-            Engage in fun quizzes, ask questions, earn rewards, and unlock achievements as you climb the leaderboards.
-            Our platform combines learning with social interaction to create a dynamic experience that grows with you.
+            Engage in exciting quizzes, ask questions, earn rewards, and unlock achievements as you compete with others.
+            Our platform seamlessly blends learning with social interaction, providing a dynamic experience that evolves with you.
           </p>
-          <div className="mt-4 flex justify-center">
-            <Link
-              to="/queries"
-              className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 transition"
-            >
-              Go to Query Page
-            </Link>
-          </div>
-        </div>
+        </section>
 
         {/* Medal Claim Section */}
-        <div className="max-w-5xl mx-auto bg-gray-800 p-6 rounded-lg shadow-lg border border-gray-700 mb-8 text-center">
+        <section className="max-w-5xl mx-auto bg-gray-800 p-6 rounded-lg shadow-lg border border-gray-700 my-8 text-center">
           <h2 className="text-3xl font-bold mb-4">Medal Claim</h2>
           {claimAvailable ? (
             <button
               onClick={handleClaimMedals}
-              className="px-6 py-3 bg-green-600 text-white rounded hover:bg-green-700 transition transform hover:scale-105"
+              className="px-6 py-3 bg-green-600 hover:bg-green-700 transition rounded-full text-lg font-semibold transform hover:scale-105"
             >
               Claim Medals
             </button>
@@ -201,12 +291,37 @@ const Home = () => {
               {Math.floor((claimCountdown % 60000) / 1000)}s.
             </p>
           )}
-        </div>
+        </section>
       </div>
 
-      {/* Footer */}
-      <footer className="max-w-5xl mx-auto text-center py-4 text-gray-400">
-        © {new Date().getFullYear()} Quiz & Social Hub. All rights reserved.
+      {/* Footer Section with Navigation Links */}
+      <footer className="max-w-5xl mx-auto bg-gray-800 p-6 rounded-lg shadow-lg border border-gray-700 my-8 text-center">
+        <div className="mb-4">
+          <h2 className="text-2xl font-bold mb-2">Quick Links</h2>
+          <div className="flex flex-wrap justify-center gap-4">
+            <Link to="/home" className="text-blue-400 hover:underline">
+              Home
+            </Link>
+            <Link to="/queries" className="text-blue-400 hover:underline">
+              Queries
+            </Link>
+            <Link to="/friends/list" className="text-blue-400 hover:underline">
+              Friends
+            </Link>
+            <Link to="/games" className="text-blue-400 hover:underline">
+              Games
+            </Link>
+            <Link to="/achievements" className="text-blue-400 hover:underline">
+              Achievements
+            </Link>
+            <Link to="/league" className="text-blue-400 hover:underline">
+              League
+            </Link>
+          </div>
+        </div>
+        <p className="text-gray-400 text-sm">
+          © {new Date().getFullYear()} Quiz & Social Hub. All rights reserved.
+        </p>
       </footer>
     </div>
   );

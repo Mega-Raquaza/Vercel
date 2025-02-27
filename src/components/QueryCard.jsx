@@ -13,7 +13,7 @@ const QueryCard = ({ query, refreshQueries }) => {
         <div className="w-12 h-12 rounded-full overflow-hidden">
           {query.userDetails?.profilePicture ? (
             <img
-              src={query.userDetails?.profilePicture}
+              src={query.userDetails.profilePicture}
               alt={`${query.username}'s avatar`}
               className="object-cover w-full h-full"
             />
@@ -44,12 +44,10 @@ const QueryCard = ({ query, refreshQueries }) => {
               <i className="fas fa-medal mr-1"></i> {query.medalsUsed} Reward
             </span>
             <span>
-              <i className="fas fa-thumbs-up mr-1"></i>{" "}
-              {query.upvotes ? query.upvotes.length : 0}
+              <i className="fas fa-thumbs-up mr-1"></i> {query.upvotes ? query.upvotes.length : 0}
             </span>
             <span>
-              <i className="fas fa-thumbs-down mr-1"></i>{" "}
-              {query.downvotes ? query.downvotes.length : 0}
+              <i className="fas fa-thumbs-down mr-1"></i> {query.downvotes ? query.downvotes.length : 0}
             </span>
           </div>
           {/* Answer snippet section */}
