@@ -105,11 +105,10 @@ const League = () => {
         setMessage("Authentication error. Please log in again.");
         return;
       }
-      const endpoint =
-        currentLeague === "none" ? "/api/users/enrollLeague" : "/api/users/promoteLeague";
+      // Update to call the correct endpoint defined in your leagues route
       const res = await axios.put(
-        `${CONST_LINK}${endpoint}`,
-        { league: nextLeague },
+        `${CONST_LINK}/api/leagues/advance`,
+        {}, // No additional payload is required since the backend uses req.user to determine the user
         {
           headers: { Authorization: `Bearer ${token}` },
           withCredentials: true,
@@ -120,12 +119,14 @@ const League = () => {
     } catch (error) {
       console.error("Error advancing league:", error);
       setMessage(
-        error.response?.data?.message || "Error processing league action. Please try again."
+        error.response?.data?.message ||
+          "Error processing league action. Please try again."
       );
     } finally {
       setLoadingAdvance(false);
     }
   };
+  
 
   // Fetch the league rankings list with error handling
   const fetchLeagueList = async () => {

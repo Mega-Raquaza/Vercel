@@ -26,8 +26,7 @@ import AskQuery from "./pages/AskQuery.jsx";
 import ChatPage from "./pages/ChatPage.jsx";
 import FriendListPage from "./pages/FriendListPage.jsx";
 import FriendProfilePage from "./pages/FriendProfilePage.jsx";
-import FriendRequestsPage from "./pages/FriendRequestPage.jsx";
-import FriendSearchPage from "./pages/FriendSearchPage.jsx";
+
 import LoadingPage from "./components/LoadingPage.jsx";
 import GameListPage from "./pages/games/GameListPage.jsx";
 import GameLobbyPage from "./pages/games/GameLobbyPage.jsx";
@@ -64,8 +63,6 @@ function AppContent() {
           <Route path="/query/:queryId" element={<QueryDetails />} />
           <Route path="/query/new" element={<AskQuery />} />
           <Route path="/friends/list" element={<FriendListPage />} />
-          <Route path="/friends/requests" element={<FriendRequestsPage />} />
-          <Route path="/friends/search" element={<FriendSearchPage />} />
           <Route path="/profile/:userId" element={<FriendProfilePage />} />
           <Route path="/chat/:friendId" element={<ChatPage />} />
           <Route path="/games" element={<GameListPage />} />

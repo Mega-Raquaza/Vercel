@@ -263,26 +263,28 @@ const Profile = () => {
         )}
       </div>
 
-      {/* Queries Section */}
-      <div className="max-w-3xl mx-auto bg-gray-800 p-6 rounded-lg shadow-md border border-gray-700">
-        <h2 className="text-xl font-bold mb-2">Queries by {profileData.username}</h2>
-        {queries.length === 0 ? (
-          <p className="text-gray-400">No queries posted yet.</p>
-        ) : (
-          <ul className="space-y-2">
-            {queries.map((q) => (
-              <li key={q._id}>
-                <Link
-                  to={`/query/${q._id}`}
-                  className="text-blue-400 hover:underline text-sm"
-                >
-                  {q.title}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
+     {/* Queries Section */}
+<div className="max-w-3xl mx-auto bg-gray-800 p-8 rounded-2xl shadow-xl border border-gray-700 mt-8">
+  <h2 className="text-3xl font-bold mb-8 text-center text-white">
+    My Queries
+  </h2>
+  {queries.length === 0 ? (
+    <p className="text-center text-gray-400">No queries posted yet.</p>
+  ) : (
+    <div className="space-y-4">
+      {queries.map((q) => (
+        <Link
+          key={q._id}
+          to={`/query/${q._id}`}
+          className="block p-4 bg-gray-700 rounded-lg border border-gray-600 hover:bg-gray-600 transition-colors"
+        >
+          <h3 className="text-lg font-semibold text-blue-300">{q.title}</h3>
+        </Link>
+      ))}
+    </div>
+  )}
+</div>
+
     </div>
   );
 };
