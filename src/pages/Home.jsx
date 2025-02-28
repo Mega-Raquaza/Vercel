@@ -122,13 +122,6 @@ const Home = () => {
   {/* Dark Overlay */}
   <div className="absolute inset-0 bg-black opacity-50"></div>
 
-  {/* Background Watermark */}
-  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-    <h1 className="whitespace-nowrap text-[10rem] sm:text-[14rem] md:text-[18rem] text-white opacity-5 font-bold uppercase tracking-wider">
-      QueryVerse
-    </h1>
-  </div>
-
   {/* Main Content */}
   <div className="relative z-10 text-center px-6 max-w-3xl">
     <h1 className="text-6xl md:text-8xl font-extrabold text-white mb-4 animate-fadeInDown">
