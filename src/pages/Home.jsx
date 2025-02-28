@@ -111,47 +111,74 @@ const Home = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
-      {/* Hero Section */}
-      <header
-        className="relative flex items-center justify-center h-screen bg-cover bg-center"
-        style={{
-          backgroundImage:
-            'url("https://source.unsplash.com/1600x900/?technology,abstract")',
-        }}
-      >
-        <div className="absolute inset-0 bg-black opacity-60"></div>
-        <div className="relative z-10 text-center px-4">
-          <h1 className="text-5xl md:text-7xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-orange-400 to-pink-500 animate-pulse">
-            Genius Clash
-          </h1>
-          <p className="mt-4 text-xl md:text-2xl text-gray-300">
-            Your hub for quizzes, queries, friends, and multiplayer games.
-          </p>
-          {user ? (
-            <Link
-              to="/profile"
-              className="mt-8 inline-block px-8 py-4 bg-green-600 hover:bg-green-700 transition rounded-full text-lg font-semibold"
-            >
-              Go to Your Profile
-            </Link>
-          ) : (
-            <div className="mt-8 flex justify-center gap-4">
-              <Link
-                to="/login"
-                className="inline-block px-8 py-4 bg-blue-600 hover:bg-blue-700 transition rounded-full text-lg font-semibold"
-              >
-                Login
-              </Link>
-              <Link
-                to="/signup"
-                className="inline-block px-8 py-4 bg-purple-600 hover:bg-purple-700 transition rounded-full text-lg font-semibold"
-              >
-                Sign Up
-              </Link>
-            </div>
-          )}
-        </div>
-      </header>
+{/* Revamped Hero Section */}
+<header
+  className="relative flex items-center justify-center h-screen bg-cover bg-center"
+  style={{
+    backgroundImage:
+      'url("https://source.unsplash.com/1600x900/?technology,abstract")',
+  }}
+>
+  {/* Dark Overlay */}
+  <div className="absolute inset-0 bg-black opacity-50"></div>
+
+  {/* Background Watermark */}
+  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+    <h1 className="whitespace-nowrap text-[10rem] sm:text-[14rem] md:text-[18rem] text-white opacity-5 font-bold uppercase tracking-wider">
+      QueryVerse
+    </h1>
+  </div>
+
+  {/* Main Content */}
+  <div className="relative z-10 text-center px-6 max-w-3xl">
+    <h1 className="text-6xl md:text-8xl font-extrabold text-white mb-4 animate-fadeInDown">
+      QueryVerse
+    </h1>
+    <p className="text-2xl md:text-3xl text-gray-200 mb-6 animate-fadeInDown delay-150">
+      Ask, Answer &amp; Rise to the Top!
+    </p>
+    <p className="text-s md:text-lg text-gray-300 leading-relaxed mb-8 animate-fadeInDown delay-300">
+      🚀 <span className="text-white">QueryVerse</span> is an interactive Q&amp;A platform where you can:
+      <br />
+      ✅ <span className="text-white">Ask Queries</span> ➡️ <span className="text-white">Answer Them</span> ➡️ <span className="text-white">Earn Aura</span>
+      <br />
+      🎯 Compete with friends while ranking up in leagues:
+      <br />
+      <span className="text-yellow-400 font-semibold">Bronze</span> → <span className="text-gray-300">Silver</span> → <span className="text-orange-400">Gold</span> → <span className="text-blue-400">Diamond</span>
+      <br />
+      👥 Make friends, chat, play, and aim for the <span className="text-purple-400 font-semibold">Master League</span>!
+    </p>
+    <div className="flex justify-center gap-6 animate-fadeInDown delay-450">
+      {user ? (
+        <Link
+          to="/profile"
+          className="px-8 py-4 bg-green-600 hover:bg-green-700 transition rounded-full text-lg font-semibold"
+        >
+          Go to Your Profile
+        </Link>
+      ) : (
+        <>
+          <Link
+            to="/login"
+            className="px-8 py-4 bg-blue-600 hover:bg-blue-700 transition rounded-full text-lg font-semibold"
+          >
+            Login
+          </Link>
+          <Link
+            to="/signup"
+            className="px-8 py-4 bg-purple-600 hover:bg-purple-700 transition rounded-full text-lg font-semibold"
+          >
+            Sign Up
+          </Link>
+        </>
+      )}
+    </div>
+  </div>
+</header>
+
+
+
+
 
       <div className="p-4 md:p-8">
         {/* User Details Section */}

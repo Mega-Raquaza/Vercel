@@ -27,7 +27,7 @@ const Navbar = () => {
           <div className="flex items-center">
             <HamburgerMenu onClick={toggleSideNav} visible={sideNavVisible} />
             <Link to="/" className="ml-4 text-2xl font-bold text-orange-500 no-underline">
-              Genius Clash
+              Query Verse
             </Link>
           </div>
           <div className="flex items-center space-x-6">
