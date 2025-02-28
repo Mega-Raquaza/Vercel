@@ -1,0 +1,24 @@
+@import "tailwindcss";
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  /* Uncomment and adjust these variables if needed
+  --text-color: rgba(255, 255, 255, 0.87);
+  --background-color: #242424;
+  */
+}
+
+body {
+  margin: 0; 
+  padding-top: 60px;
+  padding-bottom: 60px;
+  box-sizing: border-box;
+  min-height: 100vh;
+  width: 100%;
+  margin-left: auto; /* mx-auto */
+  margin-right: auto; /* mx-auto */
+
+  min-height: 100vh; /* min-h-screen */
+  background: linear-gradient(to bottom right, #111827, #1f2937, #111827); /* bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 */
+  color: white; /* text-white */
+}
