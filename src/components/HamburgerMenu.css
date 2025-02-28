@@ -1,9 +1,0 @@
-/* Hamburger and cross icons */
-i.fas.fa-bars,
-i.fas.fa-times {
-  /* color: #FFA500; Orange color for the icon */
-  font-size: 24px;
-  cursor: pointer;
-  z-index: 10; /* Ensure the icon is above the side menu */
-  position: relative; /* Set position to relative to enable z-index */
-}
