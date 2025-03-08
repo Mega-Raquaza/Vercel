@@ -11,8 +11,7 @@ const AskQuery = () => {
   const [query, setQuery] = useState({
     title: "",
     description: "",
-    subject: "",
-    medalsUsed: "", // Number of medals the user wants to spend
+    subject: ""
   });
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -54,7 +53,6 @@ const AskQuery = () => {
           subject: query.subject,
           askedBy: user._id,
           username: user.username,
-          medalsUsed: query.medalsUsed,
         },
         {
           headers: {
@@ -127,15 +125,7 @@ const AskQuery = () => {
           rows="4"
         ></textarea>
 
-        <input 
-          type="number"
-          name="medalsUsed"
-          placeholder="Medals to spend"
-          value={query.medalsUsed}
-          onChange={handleChange}
-          required
-          className="w-full p-2 bg-gray-700 border border-gray-600 rounded mb-4 text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-        />
+      
 
         <button
           type="submit"

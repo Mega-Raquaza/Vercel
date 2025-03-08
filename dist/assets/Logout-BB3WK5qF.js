@@ -1,0 +1,1 @@
+import{r as o,A as a,u as n,j as s}from"./index-D4ATXNzv.js";const u=()=>{const{logout:t}=o.useContext(a),e=n();return o.useEffect(()=>{(async()=>{await t(),e("/login")})()},[t,e]),s.jsx("div",{className:"flex items-center justify-center min-h-screen bg-gray-100",children:s.jsx("p",{className:"text-xl font-bold",children:"Logging out..."})})};export{u as default};

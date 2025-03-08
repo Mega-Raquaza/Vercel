@@ -41,9 +41,6 @@ const QueryCard = ({ query, refreshQueries }) => {
               <i className="fas fa-book-open mr-1"></i> {query.subject}
             </span>
             <span>
-              <i className="fas fa-medal mr-1"></i> {query.medalsUsed} Reward
-            </span>
-            <span>
               <i className="fas fa-thumbs-up mr-1"></i> {query.upvotes ? query.upvotes.length : 0}
             </span>
             <span>

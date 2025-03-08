@@ -230,9 +230,6 @@ const QueryDetail = () => {
     <span className="text-gray-400">
       <strong>Asked by:</strong> {query.username}
     </span>
-    <span className="text-gray-400">
-      <strong>Medals Spent:</strong> {query.medalsUsed}
-    </span>
   </div>
   {!query.finalAnswer && (
     <div className="flex space-x-4 mt-6">
@@ -243,13 +240,13 @@ const QueryDetail = () => {
         <i className="fas fa-thumbs-up mr-2"></i>
         Upvote ({query.upvotes ? query.upvotes.length : 0})
       </button>
-      <button
+      {/* <button
         onClick={handleDownvoteQuery}
         className="flex items-center px-6 py-3 bg-red-600 text-white font-semibold rounded-lg shadow hover:bg-red-500 transition"
       >
         <i className="fas fa-thumbs-down mr-2"></i>
         Downvote ({query.downvotes ? query.downvotes.length : 0})
-      </button>
+      </button> */}
     </div>
   )}
 </div>

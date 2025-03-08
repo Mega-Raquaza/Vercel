@@ -1,4 +1,5 @@
-import React, { useContext } from "react";
+// App.jsx
+import React, { useContext, Suspense, lazy } from "react";
 import {
   BrowserRouter as Router,
   Route,
@@ -7,31 +8,35 @@ import {
 } from "react-router-dom";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import Navbar from "./components/Navbar.jsx";
-import Home from "./pages/Home.jsx";
-import League from "./pages/League.jsx";
-import Achievements from "./pages/Achievements.jsx";
-import Profile from "./pages/Profile.jsx";
-import Login from "./pages/Login.jsx";
-import Signup from "./pages/Signup.jsx";
-import CreateQuizPage from "./pages/CreateQuizPage.jsx";
-import QuizzesListPage from "./pages/QuizzesListPage.jsx";
-import AnswerQuizPage from "./pages/AnswerQuizPage.jsx";
-import QuizLeaderboard from "./pages/QuizLeaderboard.jsx";
-import ResultPage from "./pages/ResultPage.jsx";
-import Logout from "./pages/Logout.jsx";
-import QueryList from "./pages/QueryList.jsx";
-import QueryDetails from "./pages/QueryDetails.jsx";
-import AskQuery from "./pages/AskQuery.jsx";
-import ChatPage from "./pages/ChatPage.jsx";
-import FriendListPage from "./pages/FriendListPage.jsx";
-import FriendProfilePage from "./pages/FriendProfilePage.jsx";
-
 import LoadingPage from "./components/LoadingPage.jsx";
-import GameListPage from "./pages/games/GameListPage.jsx";
-import GameLobbyPage from "./pages/games/GameLobbyPage.jsx";
-import GameRoomPage from "./pages/games/GameRoomPage.jsx";
-import TicTacToe from "./pages/games/TicTacToe.jsx";
 import { AuthProvider, AuthContext } from "./context/AuthContext.jsx";
+
+// Lazy-loaded pages
+const Home = lazy(() => import("./pages/Home.jsx"));
+const League = lazy(() => import("./pages/League.jsx"));
+const Achievements = lazy(() => import("./pages/Achievements.jsx"));
+const Profile = lazy(() => import("./pages/Profile.jsx"));
+const Login = lazy(() => import("./pages/Login.jsx"));
+const Signup = lazy(() => import("./pages/Signup.jsx"));
+const CreateQuizPage = lazy(() => import("./pages/CreateQuizPage.jsx"));
+const QuizzesListPage = lazy(() => import("./pages/QuizzesListPage.jsx"));
+const AnswerQuizPage = lazy(() => import("./pages/AnswerQuizPage.jsx"));
+const QuizLeaderboard = lazy(() => import("./pages/QuizLeaderboard.jsx"));
+const ResultPage = lazy(() => import("./pages/ResultPage.jsx"));
+const Logout = lazy(() => import("./pages/Logout.jsx"));
+const QueryList = lazy(() => import("./pages/QueryList.jsx"));
+const QueryDetails = lazy(() => import("./pages/QueryDetails.jsx"));
+const AskQuery = lazy(() => import("./pages/AskQuery.jsx"));
+const ChatPage = lazy(() => import("./pages/ChatPage.jsx"));
+const FriendListPage = lazy(() => import("./pages/FriendListPage.jsx"));
+const FriendProfilePage = lazy(() => import("./pages/FriendProfilePage.jsx"));
+const GameListPage = lazy(() => import("./pages/games/GameListPage.jsx"));
+const GameLobbyPage = lazy(() => import("./pages/games/GameLobbyPage.jsx"));
+const GameRoomPage = lazy(() => import("./pages/games/GameRoomPage.jsx"));
+const TicTacToe = lazy(() => import("./pages/games/TicTacToe.jsx"));
+const ChessLobbyPage = lazy(() => import("./pages/games/chess/ChessLobbyPage.jsx"));
+const ChessRoomPage = lazy(() => import("./pages/games/chess/ChessRoomPage.jsx"));
+const ChessGamePage = lazy(() => import("./pages/games/chess/ChessGamePage.jsx"));
 
 function AppContent() {
   const { loading } = useContext(AuthContext);
@@ -40,36 +45,44 @@ function AppContent() {
     <>
       {/* Navbar always visible */}
       <Navbar />
-      {/* Show LoadingPage if loading, else show the routes */}
       {loading ? (
         <LoadingPage />
       ) : (
-        <Routes>
-          <Route path="/result" element={<ResultPage />} />
-          <Route path="/" element={<Home />} />
-          <Route path="/home" element={<Home />} />
-          <Route path="/league" element={<League />} />
-          <Route path="/achievements" element={<Achievements />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/create-quiz" element={<CreateQuizPage />} />
-          <Route path="/quizzes" element={<QuizzesListPage />} />
-          <Route path="/quiz/:quizId" element={<AnswerQuizPage />} />
-          <Route path="/quiz/:quizId/leaderboard" element={<QuizLeaderboard />} />
-          <Route path="/logout" element={<Logout />} />
-          <Route path="/queries" element={<QueryList />} />
-          <Route path="/query/:queryId" element={<QueryDetails />} />
-          <Route path="/query/new" element={<AskQuery />} />
-          <Route path="/friends/list" element={<FriendListPage />} />
-          <Route path="/profile/:userId" element={<FriendProfilePage />} />
-          <Route path="/chat/:friendId" element={<ChatPage />} />
-          <Route path="/games" element={<GameListPage />} />
-          <Route path="/game/:gameType" element={<GameLobbyPage />} />
-          <Route path="/game/:gameType/room/:roomCode" element={<GameRoomPage />} />
-          <Route path="/game/tictactoe/room/:roomCode" element={<TicTacToe />} />
-          <Route path="*" element={<Navigate to="/" />} />
-        </Routes>
+        <Suspense fallback={<LoadingPage />}>
+          <Routes>
+            <Route path="/result" element={<ResultPage />} />
+            <Route path="/" element={<Home />} />
+            <Route path="/home" element={<Home />} />
+            <Route path="/league" element={<League />} />
+            <Route path="/achievements" element={<Achievements />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/create-quiz" element={<CreateQuizPage />} />
+            <Route path="/quizzes" element={<QuizzesListPage />} />
+            <Route path="/quiz/:quizId" element={<AnswerQuizPage />} />
+            <Route path="/quiz/:quizId/leaderboard" element={<QuizLeaderboard />} />
+            <Route path="/logout" element={<Logout />} />
+            <Route path="/queries" element={<QueryList />} />
+            <Route path="/query/:queryId" element={<QueryDetails />} />
+            <Route path="/query/new" element={<AskQuery />} />
+            <Route path="/friends/list" element={<FriendListPage />} />
+            <Route path="/profile/:userId" element={<FriendProfilePage />} />
+            <Route path="/chat/:friendId" element={<ChatPage />} />
+
+            {/* Game Routes */}
+            <Route path="/games" element={<GameListPage />} />
+            <Route path="/game/:gameType" element={<GameLobbyPage />} />
+            <Route path="/game/:gameType/room/:roomCode" element={<GameRoomPage />} />
+            <Route path="/game/tictactoe/room/:roomCode" element={<TicTacToe />} />
+            <Route path="/game/chess" element={<ChessLobbyPage />} />
+            <Route path="/game/chess/room/:roomCode" element={<ChessRoomPage />} />
+            <Route path="/game/chess/play/:roomCode" element={<ChessGamePage />} />
+
+            {/* Fallback */}
+            <Route path="*" element={<Navigate to="/" />} />
+          </Routes>
+        </Suspense>
       )}
     </>
   );
